@@ -1,0 +1,49 @@
+version: '3'
+services:
+  master:
+    container_name: master
+    image: polinux/postgres-bdr
+    restart: always
+    hostname: master
+    environment:
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_USER: admin
+      POSTGRES_DB: mydb
+      MODE: master
+      MASTER_PORT: 5432
+    ports:
+      - 5433:5432 
+  slave1:
+    container_name: slave1
+    image: polinux/postgres-bdr
+    restart: always
+    hostname: slave1
+    environment:
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_USER: admin
+      POSTGRES_DB: mydb
+      MODE: slave
+      MASTER_ADDRESS: master_ip
+      MASTER_PORT: 5432
+      SLAVE_PORT: 5432
+    external_links:
+      - master:master_ip
+    ports:
+      - 5434:5432 
+  slave2:
+    container_name: slave2
+    image: polinux/postgres-bdr
+    restart: always
+    hostname: slave2
+    environment:
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_USER: admin
+      POSTGRES_DB: mydb
+      MODE: slave
+      MASTER_ADDRESS: master_ip
+      MASTER_PORT: 5432
+      SLAVE_PORT: 5432
+    external_links:
+      - master1:master_ip
+    ports:
+      - 5435:5432 
